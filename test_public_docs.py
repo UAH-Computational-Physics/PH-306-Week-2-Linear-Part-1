@@ -1,13 +1,23 @@
 import pytest
 from numpydoc.validate import validate
 
-import assignment
+import linear
 
 
 DOCSTRING_TARGETS = [
-    # Add Functions for Docstring Feedback here
-    # For example:
-    # assignment.distance_traveled
+    linear.commutator,
+    linear.are_perpendicular,
+    linear.are_parallel,
+    linear.are_commutative,
+    linear.is_hermitian,
+    linear.is_unitary,
+    linear.is_linear_operator,
+    linear.projection,
+    linear.rotate_vector,
+    linear.plane_from_points,
+    linear.normal_line,
+    linear.distance_point_to_plane,
+    linear.distance_between_lines,
 ]
 
 DOCSTRING_CHECKS = {
