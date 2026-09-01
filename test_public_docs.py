@@ -18,6 +18,8 @@ DOCSTRING_TARGETS = [
     linear.normal_line,
     linear.distance_point_to_plane,
     linear.distance_between_lines,
+    linear.solve_cable_tension,
+    linear.plot_cable_tension,
 ]
 
 DOCSTRING_CHECKS = {
