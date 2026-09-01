@@ -10,6 +10,7 @@ from numpy.typing import NDArray
 
 # Numerical Libraries
 import numpy as np
+from astropy import units as u
 
 # Local Utilities
 from plotutil import colored_line_between_pts
@@ -17,6 +18,10 @@ from plotutil import colored_line_between_pts
 
 # Type Hints
 Array = NDArray[np.float64]
+
+
+# Constants
+EARTH_GRAVITY = 9.8 * u.m / u.s**2
 
 
 def commutator(first: Array, second: Array) -> Array:
@@ -79,7 +84,7 @@ def distance_between_lines(first_point, first_direction, second_point, second_di
     raise NotImplementedError("Implement distance_between_lines")
 
 
-def solve_cable_tension(N, L, rho_func, g=9.8):
+def solve_cable_tension(N, L, rho, g=EARTH_GRAVITY):
     """Solve for the tension in a hanging cable discretized into N segments."""
     raise NotImplementedError("Implement solve_cable_tension")
 

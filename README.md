@@ -40,13 +40,18 @@ Consider a cable of length $L$ hanging vertically from $z = L$ down to $z = 0$, 
 
 #### Task 1: General Linear System Solver Function
 
-Write a Python function `solve_cable_tension(N, L, rho_func, g=9.8)` that accepts structural parameters and returns the numerical spatial positions $z$ and tension values $T$.
+Write a Python function `solve_cable_tension(N, L, rho, g=EARTH_GRAVITY)` that accepts structural parameters and returns the numerical spatial positions $z$ and tension values $T$. The `rho` parameter is a callable: a function that accepts a scalar or NumPy array of heights and returns the corresponding mass density. For the specified density profile, define it with a regular function:
 
-- Dynamically build the $N \times N$ coefficient matrix $A$ (see [`np.diag`](https://numpy.org/doc/stable/reference/generated/numpy.diag.html)) and construct vector $\vec{b}$ based on the evaluated gravitational forces at $z_i$.
+```python
+def rho(z):
+    return rho_0 * (1.0 + z / L)
+```
+
+- Dynamically build the $N \times N$ coefficient matrix $A$ (see [`np.diag`](https://numpy.org/doc/stable/reference/generated/numpy.diag.html)) and construct vector $\vec{b}$ based on the evaluated gravitational forces `rho(z_i) * g * delta_z` at $z_i$.
 - Compute tension vector $\vec{T}$ using an efficient linear algebra algorithm (such as `numpy.linalg.solve` or custom back-end substitution).
 - Return the array of tensions $\vec{T}$ (length $N$) along with the array of segment boundary positions $\vec{z}$ (length $N+1$, from $z=0$ to $z=L$), so that $T_i$ represents the tension of the segment between $z_i$ and $z_{i+1}$.
-
----
+- The function must support `astropy.units.Quantity` inputs for `L`, `g`, and the values returned by `rho`. When quantities are provided, return `z` with length units and `T` with force units.
+- `numpy.linalg.solve` operates most reliably on unitless arrays. The coefficient matrix $\mathbf{A}$ is dimensionless, while $b$ has force units. Before calling the solver, convert the force vector to SI values with `b.si.value`; after solving, restore the force units with `tension_values * u.N`.
 
 #### Task 2: Visualization Function
 
@@ -54,6 +59,8 @@ Write a Python function `plot_cable_tension(z, T, L)` that generates a visual re
 
 - Plot the 1D cable vertically (with $x=0$ and height $z$). Use the provided `colored_line_between_pts` helper from `plotutil.py` (or a `matplotlib` `LineCollection` / continuous scatter mapping) where line segments are colored according to tension $T_i$.
 - Include a colorbar labeled `"Tension (N)"`, clear axis labels ($z$ position in meters), a descriptive plot title showing segment count $N$ (the `inferno` colormap is used by `colored_line_between_pts`).
+- The function should return the figure and axes objects.
+- The function must accept `z` and `T` as `astropy.units.Quantity` arrays. Convert quantities to values in compatible display units before passing them to Matplotlib.
 - Solution will be auto-graded against a plot that will be provided via Canvas.
 
 #### Test Case & Validation
