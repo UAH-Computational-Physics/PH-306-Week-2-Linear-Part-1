@@ -1,22 +1,72 @@
-# PH306 Assignment Template (Notebook + Script Grading)
+# PH 306 Week 2: Linear Algebra, Part 1
 
-This template is designed to create specific assignment templates for PH 306 using [CodeGrade](https://www.codegrade.com/).
+## Homework
 
-- The Python files `assignment.ipynb` & `assignment.py` serve as example CodeGrade assignments.
-- To create a new assignment, create a new repository based on this template then [set up that new repository as a template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository).
+### General
 
-## Files
+1. Calculate a matrix commutator with `commutator`.
+1. Determine whether two vectors are perpendicular with `are_perpendicular`.
+1. Determine whether two nonzero vectors are parallel with `are_parallel`.
+1. Determine whether two matrices commute with `are_commutative`.
+1. Determine whether a matrix is Hermitian with `is_hermitian` without `scipy`.
+1. Determine whether a matrix is unitary with `is_unitary` without `scipy`.
+1. Implement `is_linear_operator` for a matrix representing a transformation of a vector space to itself.
+    - See Boas Section 3.7.
+    - The input is an $M \times M$ matrix/array.
+1. Find $\operatorname{proj}_{\vec{B}}\vec{A}$ with `projection`.
+1. Rotate a vector about a specified axis by angle $\theta$ in $\mathbb{R}^3$ with `rotate_vector`.
+1. Complete the following exercises from Boas:
+    - Example 3.5.1: find a plane through three points with `plane_from_points`.
+    - Example 3.5.2: find a normal line through a point with `normal_line`.
+    - Example 3.5.3: find the distance from a point to a plane with `distance_point_to_plane`.
+    - Example 3.5.5: find the minimum distance between two lines with `distance_between_lines`.
 
-- `assignment.ipynb`: example notebook assignment
-- `assignment.py`: example script assignment
-- `tests/test_public.py`: visible tests used by CodeGrade autograder
+For each function, follow the parameter and return-value contract in its
+docstring. Angles are in radians. For numerical comparisons, respect the
+provided `tolerance` argument. Raise a suitable exception for invalid input,
+such as a zero projection direction or an incorrectly shaped vector.
 
-## Student workflow
+### Physical: Numerical Solution & Visualization of a Hanging Cable
 
-1. Open the assignment script or notebook.
-1. Commit and push.
-1. Review autograding results in CodeGrade.
+#### Purpose
 
-## Devcontainer environment
+In this assignment, you will implement a computational model for the static force equilibrium of a hanging cable with non-uniform mass density. You will write a general matrix solver to solve the discretized system for arbitrary segment counts $N$ and visualize the internal stress state of the physical system using continuous color mapping.
 
-The provided `.devcontainer/devcontainer.json` and `.devcontainer/Dockerfile` uses a Micromamba image and creates a new environment with `mamba` from `environment.yml` (using `conda-forge` and `astropy`). This is primarily used for students who prefer to develop in [GitHub Codespaces](https://github.com/features/codespaces).
+#### Theoretical Background
+
+Consider a cable of length $L$ hanging vertically from $z = L$ down to $z = 0$, with height-dependent mass density $\rho(z) = \rho_0 \left(1 + \frac{z}{L}\right)$. Discretizing the cable into $N$ segments of length $\Delta z = L/N$ yields an linear system where $$T_i - T_{i-1} - \rho(z_i) g \Delta z = 0 $$, $i=0$ represents the lowest segment, $i=N-1$ represents the top segment, and $z_i = \Delta z (i + 1/2)$.
+
+#### Task 1: General Linear System Solver Function
+
+Write a Python function `solve_cable_tension(N, L, rho_func, g=9.8)` that accepts structural parameters and returns the numerical spatial positions $z$ and tension values $T$.
+
+- Dynamically build the $N \times N$ coefficient matrix $A$ (see [`np.diag`](https://numpy.org/doc/stable/reference/generated/numpy.diag.html)) and construct vector $\vec{b}$ based on the evaluated gravitational forces at $z_i$.
+- Compute tension vector $\vec{T}$ using an efficient linear algebra algorithm (such as `numpy.linalg.solve` or custom back-end substitution).
+- Return the array of tensions $\vec{T}$ (length $N$) along with the array of segment boundary positions $\vec{z}$ (length $N+1$, from $z=0$ to $z=L$), so that $T_i$ represents the tension of the segment between $z_i$ and $z_{i+1}$.
+
+---
+
+#### Task 2: Visualization Function
+
+Write a Python function `plot_cable_tension(z, T, L)` that generates a visual representation of the cable.
+
+- Plot the 1D cable vertically (with $x=0$ and height $z$). Use the provided `colored_line_between_pts` helper from `plotutil.py` (or a `matplotlib` `LineCollection` / continuous scatter mapping) where line segments are colored according to tension $T_i$.
+- Include a colorbar labeled `"Tension (N)"`, clear axis labels ($z$ position in meters), a descriptive plot title showing segment count $N$ (the `inferno` colormap is used by `colored_line_between_pts`).
+- Solution will be auto-graded against a plot that will be provided via Canvas.
+
+#### Test Case & Validation
+
+Run your script using $L = 10\,\mathrm{m}$, $\rho_0 = 2\,\mathrm{kg/m}$, $g = 9.8\,\mathrm{m/s}^2$, and compare solutions across $N = 5, 20, 100$. Overlay or plot beside your solution the continuous exact analytical solution:
+
+$$T_{\,\mathrm{exact}}(z) = \int_0^z \rho(z') g \, dz' = \rho_0 g \left(z + \frac{z^2}{2L}\right)$$
+
+## Running checks
+
+From the repository root, run:
+
+```bash
+python -m pytest test_public.py test_public_docs.py
+python -m mypy --config-file mypy.ini --strict linear.py
+```
+
+CodeGrade runs comparable checks after submission.
