@@ -69,11 +69,6 @@ def plane_from_points(first, second, third):
     raise NotImplementedError("Implement plane_from_points")
 
 
-def normal_line(point, normal):
-    """Find the line through a point perpendicular to a plane."""
-    raise NotImplementedError("Implement normal_line")
-
-
 def distance_point_to_plane(point, normal, offset):
     """Find the minimum distance from a point to a plane."""
     raise NotImplementedError("Implement distance_point_to_plane")

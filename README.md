@@ -12,12 +12,14 @@
 1. Determine whether a matrix is unitary with `is_unitary` without `scipy`.
 1. Implement `is_linear_operator` for a matrix representing a transformation of a vector space to itself.
     - See Boas Section 3.7.
-    - The input is an $M \times M$ matrix/array.
 1. Find $\operatorname{proj}_{\vec{B}}\vec{A}$ with `projection`.
-1. Rotate a vector about a specified axis by angle $\theta$ in $\mathbb{R}^3$ with `rotate_vector`.
+1. Rotate a vector about a coordinate axis by angle $\theta$ in $\mathbb{R}^3$ with `rotate_vector`.
+    - Pass `axis=0`, `axis=1`, or `axis=2` for rotations about the $x$, $y$, or $z$ axis, respectively.
 1. Complete the following exercises from Boas:
     - Example 3.5.1: find a plane through three points with `plane_from_points`.
-    - Example 3.5.2: find a normal line through a point with `normal_line`.
+        - Return values for when the equation is in standard form (everything set to zero)
+        - Return the normal to the plane as a unit vector in $\mathbb{R}_3$.
+        - Return the offset/constant as a scalar.
     - Example 3.5.3: find the distance from a point to a plane with `distance_point_to_plane`.
     - Example 3.5.5: find the minimum distance between two lines with `distance_between_lines`.
 
