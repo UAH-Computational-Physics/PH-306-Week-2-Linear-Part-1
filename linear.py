@@ -4,9 +4,15 @@ Complete each function below. Use NumPy arrays for vector and matrix inputs and
 outputs unless the function documentation specifies otherwise.
 """
 
-#Imports
-import numpy as np
+# --- Imports --- #
+# Built-in Libraries
 from numpy.typing import NDArray
+
+# Numerical Libraries
+import numpy as np
+
+# Local Utilities
+from plotutil import colored_line_between_pts
 
 
 # Type Hints
