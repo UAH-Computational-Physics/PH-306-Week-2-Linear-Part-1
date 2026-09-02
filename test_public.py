@@ -11,26 +11,61 @@ from astropy.tests.helper import assert_quantity_allclose
 import linear
 
 
-def test_commutator_and_matrix_properties() -> None:
-    """Check representative matrix operations and properties."""
+def test_commutator() -> None:
+    """Check the matrix commutator $[A, B] = AB - BA$."""
     pauli_x = np.array([[0.0, 1.0], [1.0, 0.0]])
     pauli_z = np.array([[1.0, 0.0], [0.0, -1.0]])
     expected = np.array([[0.0, -2.0], [2.0, 0.0]])
     assert np.allclose(linear.commutator(pauli_x, pauli_z), expected)
-    assert linear.are_commutative(np.eye(2), pauli_x)
+
+
+def test_are_commutative() -> None:
+    """Check whether two matrices commute."""
+    assert linear.are_commutative(np.eye(2), np.array([[0.0, 1.0], [1.0, 0.0]]))
+
+
+def test_is_hermitian() -> None:
+    """Check whether a matrix is Hermitian."""
+    pauli_x = np.array([[0.0, 1.0], [1.0, 0.0]])
     assert linear.is_hermitian(pauli_x)
+
+
+def test_is_unitary() -> None:
+    """Check whether a matrix is unitary."""
+    pauli_x = np.array([[0.0, 1.0], [1.0, 0.0]])
     assert linear.is_unitary(pauli_x)
+
+
+def test_is_linear_operator() -> None:
+    """Check whether a matrix represents a linear operator."""
+    pauli_x = np.array([[0.0, 1.0], [1.0, 0.0]])
     assert linear.is_linear_operator(pauli_x)
 
 
-def test_vector_relationships_projection_and_rotation() -> None:
-    """Check vector relationships, projection, and a rotation about z."""
+def test_are_perpendicular() -> None:
+    """Check whether two vectors are perpendicular."""
     assert linear.are_perpendicular(np.array([1.0, 0.0, 0.0]), np.array([0.0, 2.0, 0.0]))
+
+
+def test_are_parallel() -> None:
+    """Check whether two nonzero vectors are parallel."""
     assert linear.are_parallel(np.array([1.0, -2.0, 0.0]), np.array([-3.0, 6.0, 0.0]))
+
+
+def test_projection() -> None:
+    """Check the projection of one vector onto another."""
     assert np.allclose(
         linear.projection(np.array([3.0, 4.0]), np.array([1.0, 0.0])),
         [3.0, 0.0],
     )
+    assert np.allclose(
+        linear.projection(np.array([1, 0]), np.array([0, 1])),
+        [0.0, 0.0],
+    )
+
+
+def test_rotate_vector() -> None:
+    """Check the rotation of a vector about an axis."""
     assert np.allclose(
         linear.rotate_vector(
             np.array([1.0, 0.0, 0.0]), 2, np.pi / 2
@@ -39,10 +74,8 @@ def test_vector_relationships_projection_and_rotation() -> None:
     )
 
 
-def test_three_dimensional_geometry() -> None:
-    """Check representative planes, normal lines, and distances."""
-
-    # Check Plane Generation from Points
+def test_plane_from_points() -> None:
+    """Check plane generation from three noncollinear points."""
     normal, offset = linear.plane_from_points(
         np.array([1.0, 0.0, 0.0]),
         np.array([0.0, 1.0, 0.0]),
@@ -51,7 +84,9 @@ def test_three_dimensional_geometry() -> None:
     assert np.isclose(np.linalg.norm(normal), 1.0)
     assert np.isclose(np.dot(normal, [1.0, 0.0, 0.0]), offset)
 
-    # Check Distance from Point to Plane
+
+def test_distance_point_to_plane() -> None:
+    """Check the minimum distance from a point to a plane."""
     assert np.isclose(
         linear.distance_point_to_plane(
             np.array([0.0, 0.0, 2.0]), np.array([0.0, 0.0, 1.0]), 0.0
@@ -59,7 +94,9 @@ def test_three_dimensional_geometry() -> None:
         2.0,
     )
 
-    # Check the Minimum Distance Between Two Lines
+
+def test_distance_between_lines() -> None:
+    """Check the minimum distance between two lines in $\\mathbb{R}^3$."""
     assert np.isclose(
         linear.distance_between_lines(
             np.array([0.0, 0.0, 0.0]),
@@ -71,8 +108,8 @@ def test_three_dimensional_geometry() -> None:
     )
 
 
-def test_cable_functions_support_astropy_quantities() -> None:
-    """Check that the cable solver and plotter preserve physical units."""
+def test_solve_cable_tension() -> None:
+    """Check that the cable solver preserves physical units and computes tension correctly."""
     segment_count = 10
     length = 10.0 * u.m
     gravity = 9.8 * u.m / u.s**2
@@ -92,16 +129,9 @@ def test_cable_functions_support_astropy_quantities() -> None:
     assert_quantity_allclose(positions, expected_positions)
     assert_quantity_allclose(tension, expected_tension)
 
-    figure, axes = linear.plot_cable_tension(positions, tension, length)
-    assert axes in figure.axes
 
-    import matplotlib.pyplot as plt
-
-    plt.close(figure)
-
-
-def test_plot_cable_tension_returns_labeled_figure_and_axes() -> None:
-    """Check that the cable plot has a tension colorbar and height labeling."""
+def test_plot_cable_tension() -> None:
+    """Check that the cable plotter produces a properly labeled figure with colorbar."""
     import matplotlib.pyplot as plt
 
     positions = np.linspace(0.0, 10.0, 11)
