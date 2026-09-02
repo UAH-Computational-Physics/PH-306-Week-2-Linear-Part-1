@@ -9,12 +9,16 @@
 1. Determine whether two nonzero vectors are parallel with `are_parallel`.
 1. Determine whether two matrices commute with `are_commutative`.
 1. Determine whether a matrix is Hermitian with `is_hermitian` without `scipy`.
+    - Raise a `ValueError` if the matrix is not square.
 1. Determine whether a matrix is unitary with `is_unitary` without `scipy`.
+    - Raise a `ValueError` if the matrix is not square.
 1. Implement `is_linear_operator` for a matrix representing a transformation of a vector space to itself.
     - See Boas Section 3.7.
 1. Find $\operatorname{proj}_{\vec{B}}\vec{A}$ with `projection`.
+    - Raise a `ValueError` if either vector is the zero vector.
 1. Rotate a vector about a coordinate axis by angle $\theta$ in $\mathbb{R}^3$ with `rotate_vector`.
     - Pass `axis=0`, `axis=1`, or `axis=2` for rotations about the $x$, $y$, or $z$ axis, respectively.
+    - Raise a `ValueError` if `axis` is not one of `0`, `1`, or `2`.
 1. Complete the following exercises from Boas:
     - Example 3.5.1: find a plane through three points with `plane_from_points`.
         - Return values for when the equation is in standard form (everything set to zero)
