@@ -2,11 +2,12 @@
 
 # --- Imports --- #
 # Standard Libraries
-from typing import NDArray, Optional
+from typing import Optional
 import warnings
 
 # Numerical Libraries
 import numpy as np
+from numpy import typing as npt
 
 # Plotting Libraries
 import matplotlib as mpl
@@ -15,7 +16,6 @@ from matplotlib.collections import LineCollection, Collection
 
 
 # --- Typing --- #
-ArrayLike = NDArray[np.float64] | list[float] | tuple[float, ...]
 OptString = Optional[str]
 
 
@@ -31,7 +31,7 @@ mpl.rcParams.update({
 # This is copied from the MatPlotLib documentation (with minor modifications)
 # https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line.html
 def colored_line_between_pts(
-        x: ArrayLike, y: ArrayLike, force: ArrayLike, ax: Axes,
+        x: npt.ArrayLike, y: npt.ArrayLike, force: npt.ArrayLike, ax: Axes,
         clabel: OptString = None, **lc_kwargs
     ) -> Collection:
     """
