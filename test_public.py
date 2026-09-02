@@ -120,7 +120,7 @@ def test_solve_cable_tension() -> None:
     positions, tension = linear.solve_cable_tension(
         segment_count, length, density, gravity
     )
-    expected_positions = np.linspace(0.0, 10.0, segment_count + 1) * u.m
+    expected_positions = np.linspace(0.0, length.value, segment_count + 1) * length.unit
     midpoint_positions = (expected_positions[:-1] + expected_positions[1:]) / 2
     expected_tension = np.cumsum(
         density(midpoint_positions) * gravity * (length / segment_count)
@@ -134,8 +134,8 @@ def test_plot_cable_tension() -> None:
     """Check that the cable plotter produces a properly labeled figure with colorbar."""
     import matplotlib.pyplot as plt
 
-    positions = np.linspace(0.0, 10.0, 11)
-    tension = np.linspace(19.6, 294.0, 10)
+    positions = np.linspace(0.0, 10.0, 11) * u.m
+    tension = np.linspace(19.6, 294.0, 10) * u.N
     figure, axes = linear.plot_cable_tension(positions, tension, 10.0)
 
     assert axes in figure.axes

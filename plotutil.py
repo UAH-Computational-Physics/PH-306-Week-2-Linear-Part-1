@@ -84,7 +84,7 @@ def colored_line_between_pts(
     # needs to be (numlines) x (points per line) x 2 (for x and y)
     points = np.array([x, y]).T.reshape(-1, 1, 2)
     segments = np.concatenate([points[:-1], points[1:]], axis=1)
-    lc_kwargs["cmap"] = "inferno"
+    lc_kwargs["cmap"] = "inferno_r"
     lc = LineCollection(segments, **lc_kwargs)
 
     # Set the values used for colormapping (min to max of the force array)
