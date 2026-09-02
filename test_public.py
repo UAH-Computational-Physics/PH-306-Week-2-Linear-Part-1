@@ -25,8 +25,8 @@ def test_commutator_and_matrix_properties() -> None:
 
 def test_vector_relationships_projection_and_rotation() -> None:
     """Check vector relationships, projection, and a rotation about z."""
-    assert linear.are_perpendicular(np.array([1.0, 0.0]), np.array([0.0, 2.0]))
-    assert linear.are_parallel(np.array([1.0, -2.0]), np.array([-3.0, 6.0]))
+    assert linear.are_perpendicular(np.array([1.0, 0.0, 0.0]), np.array([0.0, 2.0, 0.0]))
+    assert linear.are_parallel(np.array([1.0, -2.0, 0.0]), np.array([-3.0, 6.0, 0.0]))
     assert np.allclose(
         linear.projection(np.array([3.0, 4.0]), np.array([1.0, 0.0])),
         [3.0, 0.0],
