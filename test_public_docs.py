@@ -15,7 +15,6 @@ DOCSTRING_TARGETS = [
     linear.projection,
     linear.rotate_vector,
     linear.plane_from_points,
-    linear.normal_line,
     linear.distance_point_to_plane,
     linear.distance_between_lines,
     linear.solve_cable_tension,
